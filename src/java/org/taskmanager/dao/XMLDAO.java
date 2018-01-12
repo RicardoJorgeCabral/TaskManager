@@ -17,6 +17,7 @@ import org.dom4j.Node;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.taskmanager.model.Project;
 import org.taskmanager.model.TaskType;
 
 /**
@@ -24,12 +25,13 @@ import org.taskmanager.model.TaskType;
  * @author Ricardoc
  */
 public class XMLDAO {
-  private File xmlFile;
+  private File xmlFile = new File("db.xml");
   private Document doc;
   
-  public XMLDAO(File xmlFile) throws Exception {
-    
-    this.xmlFile = xmlFile;
+  public XMLDAO() throws Exception {
+
+    if ( (!this.xmlFile.exists()) ) 
+      XMLDAO.createDbFile(this.xmlFile);
     if ( (this.xmlFile.exists()) && !(this.xmlFile.isDirectory()) ) {            
       SAXReader reader = new SAXReader();
       this.doc = reader.read( this.xmlFile );
@@ -40,18 +42,18 @@ public class XMLDAO {
     
   } 
   
-  public static void createDbFile(String file) throws Exception {
+  public static void createDbFile(File f) throws Exception {
     BufferedWriter writer = null;
-    try {
-      File f;
-      f = new File(file);
+    try {      
       if ( (!f.isDirectory()) & (!f.exists()) ) {
         f.createNewFile();
         writer = new BufferedWriter(new FileWriter(f));
         writer.write("<?xml version=\"1.0\"?>");      
         writer.write("<data>");
+        writer.write("<projects>");
+        writer.write("</projects>");        
         writer.write("<tasktypes>");
-        writer.write("</tasktypes>");
+        writer.write("</tasktypes>");        
         writer.write("<tasks>");
         writer.write("</tasks>");
         writer.write("<tasklogtimes>");
@@ -143,6 +145,81 @@ public class XMLDAO {
       if (aNode != null) t.setNotes(aNode.getText());       
       
       res.add(t);
+    }
+    
+    return res;
+  }
+  
+   /*
+  ================ P R O J E C T S ==================
+  */
+  
+  public void saveProject(Project p) throws Exception {
+    Element node = this.doc.getRootElement().element("projects");
+    Element newNode = node.addElement("project");
+    
+    newNode.addAttribute("id", p.getId().toString());
+    newNode.addElement("description").addText(p.getDescription());
+    if ( (p.getNotes()!=null) && (p.getNotes().length()>0) )
+      newNode.addElement("notes").addText(p.getNotes());    
+  }
+  
+  public Project getProject(Integer id) throws Exception {
+    Project p = null;
+    
+    Element nodes = this.doc.getRootElement().element("projects");
+    Iterator itr = nodes.elementIterator();
+    
+    boolean found = false;
+    
+    while (itr.hasNext() && !found) {
+      Node node = (Node) itr.next();
+      if ( id.equals(node.valueOf("@id"))) {
+        found = true;
+        p = new Project();
+        p.setId(new Integer(node.valueOf("@id")));
+        p.setDescription(node.selectSingleNode("description").getText());
+        Node aNode = node.selectSingleNode("notes");
+        if (aNode != null) p.setNotes(aNode.getText());
+      }
+    }
+    return p;
+  }
+  
+  public boolean removeProject(Integer id) throws Exception {
+    Element nodes = this.doc.getRootElement().element("projects");
+    Iterator itr = nodes.elementIterator();
+
+    boolean found = false;
+        
+    while (itr.hasNext() && !found) {
+      Node node = (Node) itr.next();                          
+      if ( id.equals(new Integer(node.valueOf("@id")))) {
+        found = true;
+        node.detach();
+      }
+    }
+    
+    return found;
+  }
+  
+  public ArrayList<Project> getProjects() throws Exception {
+    ArrayList<Project> res = new ArrayList<Project>();
+    Element nodes = this.doc.getRootElement().element("projects");
+    
+    Iterator itr = nodes.elementIterator();
+    
+    while (itr.hasNext()) {
+      Node node = (Node) itr.next();                        
+      Project p = new Project();
+      
+      Integer nodeId = new Integer(node.valueOf("@id"));
+      p.setId(nodeId);
+      p.setDescription(node.selectSingleNode("description").getText());
+      Node aNode = node.selectSingleNode("notes");
+      if (aNode != null) p.setNotes(aNode.getText());       
+      
+      res.add(p);
     }
     
     return res;
