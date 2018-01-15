@@ -11,23 +11,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<title>W3.CSS Template</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="css/w3.css">
-<link rel="stylesheet" type="text/css" href="css/w3-theme-black.css">
-<link rel="stylesheet" type="text/css" href="css/Roboto.css">
-<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-<style>
-html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
-.w3-sidebar {
-  z-index: 3;
-  width: 250px;
-  top: 43px;
-  bottom: 0;
-  height: inherit;
-}
-</style>
+
+<% out.print(HtmlUtils.getHtmlHeaders()); %>
+
 <body>
 
 <!-- Navbar -->

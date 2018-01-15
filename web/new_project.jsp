@@ -1,3 +1,10 @@
+<%-- 
+    Document   : new_project
+    Created on : 15/jan/2018, 16:10:25
+    Author     : Ricardoc
+--%>
+
+<%@page import="java.util.Map"%>
 <%@page import="org.taskmanager.htmlutils.HtmlUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -5,7 +12,12 @@
   
 <% out.print(HtmlUtils.getHtmlHeaders()); %>
 
-  <body>
+<body>
+
+<%
+String errorf1 = null;
+if (request.getParameter("errorf1")!=null) errorf1=request.getParameter("errorf1");
+%>
 
 <!-- Navbar -->
 <% out.print(HtmlUtils.getNavBar()); %>
@@ -27,43 +39,35 @@
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
-<div class="w3-main" style="margin-left:250px">
-
+<!-- <div class="w3-main" style="margin-left:250px"> -->
+<div class="w3-main">
+  <form id="form1" action="SaveProjectServlet" method="POST">
+  <input type="hidden" name="id" value="0" />
+  
   <div class="w3-row w3-padding-64">
     <div class="w3-twothird w3-container">
-      <h1 class="w3-text-teal">Heading</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
-        dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="w3-third w3-container">
-      <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
-      <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
+      <h1 class="w3-text-teal">New Project</h1>
+      <table>
+        <tr>
+          <td valign="top">Project:</td>
+          <td><input type="text" name="description" value="" size="95" /><div class="w3-red"><% if (errorf1 != null) out.print(errorf1); %></div></td>
+        </tr>
+        <tr>
+          <td valign="top">Notes:</td>
+          <td><textarea name="notes" rows="6" cols="100">
+            </textarea></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <a class="w3-bar-item w3-button w3-theme-l1" href="javascript:{}" onclick="document.getElementById('form1').submit(); return false;">Save</a>
+            <a class="w3-bar-item w3-button w3-theme-l1" href="javascript:{}" onclick="window.location.href='projects.jsp'; return false;">Back</a>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 
-  <div class="w3-row">
-    <div class="w3-twothird w3-container">
-      <h1 class="w3-text-teal">Heading</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
-        dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="w3-third w3-container">
-      <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
-      <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
-    </div>
-  </div>
-
-  <div class="w3-row w3-padding-64">
-    <div class="w3-twothird w3-container">
-      <h1 class="w3-text-teal">Heading</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum
-        dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div class="w3-third w3-container">
-      <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
-      <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
-    </div>
-  </div>
+  </form>
 
   <!-- Pagination -->
   <!--

@@ -59,6 +59,26 @@ public class HtmlUtils {
     return res;
   }
   
+  public static String getHtmlHeaders() {
+    String res = "<title>Task Manager</title>";
+    res += "<meta charset=\"UTF-8\">";
+    res += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
+    res += "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/w3.css\">";
+    res += "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/w3-theme-black.css\">";
+    res += "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/Roboto.css\">";
+    res += "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/font-awesome.min.css\">";
+    res += "<style>";
+    res += "html,body,h1,h2,h3,h4,h5,h6 {font-family: \"Roboto\", sans-serif;} ";
+    res += ".w3-sidebar {";
+    res += "z-index: 3;";
+    res += "width: 250px;";
+    res += "top: 43px;";
+    res += "bottom: 0;";
+    res += "height: inherit;";
+    res += "} </style>";
+    return res;
+  }
+  
   public static String getFooter() {
     String msgFooter = new String();
     Date date = new Date();

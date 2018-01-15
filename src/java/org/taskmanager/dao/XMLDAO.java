@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -153,6 +154,20 @@ public class XMLDAO {
    /*
   ================ P R O J E C T S ==================
   */
+  
+  public Integer getLastProjectId() throws Exception {
+    Integer lastId = 0;
+    ArrayList<Project> projs = this.getProjects();    
+    if (!projs.isEmpty()) {
+      ArrayList<Integer> ids = new ArrayList<Integer>();
+      for (Project p : projs) {
+        ids.add(p.getId());
+      }
+      Collections.sort(ids);
+      lastId = ids.get(ids.size()-1);
+    }
+    return lastId;
+  }
   
   public void saveProject(Project p) throws Exception {
     Element node = this.doc.getRootElement().element("projects");
