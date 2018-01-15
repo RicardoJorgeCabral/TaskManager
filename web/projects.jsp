@@ -44,10 +44,15 @@
       <table cellpadding="3">
         <tr class="w3-theme-l1"><td>&nbsp;</td><td>Id</td><td>Description</td><td>Notes</td></tr>
       <%
-        XMLDAO db = new XMLDAO();
-        ArrayList<Project> list = db.getProjects();
-        for (Project p : list) {
-          out.print("<tr><td>&nbsp;</td><td>" + p.getId().toString() + "</td><td>" + p.getDescription() + "</td><td>" + p.getNotes() + "</td></tr>");
+        try {
+          XMLDAO db = new XMLDAO();
+          ArrayList<Project> list = db.getProjects();
+          for (Project p : list) {
+            out.print("<tr><td>&nbsp;</td><td>" + p.getId().toString() + "</td><td>" + p.getDescription() + "</td><td>" + p.getNotes() + "</td></tr>");
+          }
+        }
+        catch (Exception ex) {
+          out.print(ex.getMessage());
         }
         %>      
       </table>

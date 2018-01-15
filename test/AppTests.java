@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import org.taskmanager.dao.XMLDAO;
+import org.taskmanager.model.Project;
 import org.taskmanager.model.TaskType;
 
 /*
@@ -47,13 +49,15 @@ public class AppTests {
         writer = new BufferedWriter(new FileWriter(f));
         writer.write("<?xml version=\"1.0\"?>");      
         writer.write("<data>");
+        writer.write("<projects>");
+        writer.write("</projects>");        
         writer.write("<tasktypes>");
-        writer.write("</tasktypes>");
+        writer.write("</tasktypes>");        
         writer.write("<tasks>");
         writer.write("</tasks>");
         writer.write("<tasklogtimes>");
         writer.write("</tasklogtimes>");
-        writer.write("</data>");
+        writer.write("</data>");   
         System.out.println(f.getName() + " is created!");
       }
       else
@@ -96,14 +100,45 @@ public class AppTests {
     }
   }
   
+  private static void testInsProject() {
+    try {
+      XMLDAO db;
+      db = new XMLDAO();
+      Project p = new Project(1,"Teste 1",null);
+      db.saveProject(p);
+      db.writeXMLFile();
+    }
+    catch (Exception ex) {
+      printError(ex);
+    }
+  }
+  
+  private static void test3() {
+    try {
+      XMLDAO db;
+      db = new XMLDAO();
+      ArrayList<Project> projs = db.getProjects();
+      
+      for (Project p : projs) {
+        System.out.println("ID: " + p.getId().toString());
+        System.out.println("Desc: " + p.getDescription());
+        System.out.println("Notes: " + p.getNotes());
+        System.out.println("");
+      }
+    }
+    catch (Exception ex) {
+      printError(ex);
+    }
+  }
+  
   private static void printError(Exception e) {
     System.out.println("Error:\n" + e.getMessage() );
     e.printStackTrace();
   }
     
   public static void main(String[] args) throws Exception {
-    deleteDBFile();
-    createFile();
+    // testInsProject();
+    test3();
     
     
   }  

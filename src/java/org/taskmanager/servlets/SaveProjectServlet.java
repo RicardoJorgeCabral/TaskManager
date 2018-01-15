@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlets;
+package org.taskmanager.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -57,12 +57,17 @@ public class SaveProjectServlet extends HttpServlet {
         if (id==0) {
           id = db.getLastProjectId() + 1;
         }
+        else {
+          if (!db.removeProject(id))
+            throw new ServletException("Unable to update project!");
+        }
         p.setId(id);
+        db.saveProject(p);
+        db.writeXMLFile();
+        response.sendRedirect("projects.jsp");
       } catch (Exception ex) {
-        Logger.getLogger(SaveProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      
-      response.sendRedirect("projects.jsp");
+        throw new ServletException(ex.getMessage());        
+      }           
 
       /* TODO output your page here. You may use following sample code. */
       /*

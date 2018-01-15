@@ -159,7 +159,7 @@ public class XMLDAO {
     Integer lastId = 0;
     ArrayList<Project> projs = this.getProjects();    
     if (!projs.isEmpty()) {
-      ArrayList<Integer> ids = new ArrayList<Integer>();
+      ArrayList<Integer> ids = new ArrayList<>();
       for (Project p : projs) {
         ids.add(p.getId());
       }
@@ -228,7 +228,8 @@ public class XMLDAO {
       Node node = (Node) itr.next();                        
       Project p = new Project();
       
-      Integer nodeId = new Integer(node.valueOf("@id"));
+      String auxId = node.valueOf("id");
+      Integer nodeId = new Integer(auxId);
       p.setId(nodeId);
       p.setDescription(node.selectSingleNode("description").getText());
       Node aNode = node.selectSingleNode("notes");
