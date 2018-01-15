@@ -73,7 +73,7 @@ public class AppTests {
   private static void test1() {
     try {
       XMLDAO db;
-      db = new XMLDAO(new File(AppTests.file));
+      db = new XMLDAO();
       TaskType t = new TaskType();
       t.setId(2);
       t.setDescription("Test 2");      
@@ -87,7 +87,7 @@ public class AppTests {
   private static void test2() {
     try {
       XMLDAO db;
-      db = new XMLDAO(new File(AppTests.file));
+      db = new XMLDAO();
       db.removeTaskType(2);
       db.writeXMLFile();
     }
