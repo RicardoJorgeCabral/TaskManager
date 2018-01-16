@@ -15,6 +15,10 @@
 <% out.print(HtmlUtils.getHtmlHeaders()); %>
 
 <body>
+<%
+String errormsg = null;
+if (request.getParameter("errormsg")!=null) errormsg=request.getParameter("errormsg");
+%>
 
 <!-- Navbar -->
 <% out.print(HtmlUtils.getNavBar()); %>
@@ -27,7 +31,7 @@
   </a>
   <h4 class="w3-bar-item"><b>Menu</b></h4>
   <a class="w3-bar-item w3-button w3-hover-black" href="projects.jsp">List of projects</a>
-  <a class="w3-bar-item w3-button w3-hover-black" href="new_project.jsp">Add project</a>
+  <a class="w3-bar-item w3-button w3-hover-black" href="project_new.jsp">Add project</a>
   <a class="w3-bar-item w3-button w3-hover-black" href="index.jsp">Back</a>  
 </nav>
 
@@ -41,6 +45,11 @@
     <div class="w3-twothird w3-container">
       <h1 class="w3-text-teal">Projects</h1>
       <h2><b>List of projects</b></h2>
+      <div class="w3-red">
+        <%
+          if (errormsg!=null) out.print("<p>" + errormsg + "</p>");          
+         %>
+      </div>
       <table cellpadding="3">
         <tr class="w3-theme-l1"><td>&nbsp;</td><td>Id</td><td>Description</td><td>Notes</td></tr>
       <%
@@ -48,11 +57,15 @@
           XMLDAO db = new XMLDAO();
           ArrayList<Project> list = db.getProjects();
           for (Project p : list) {
-            out.print("<tr><td>&nbsp;</td><td>" + p.getId().toString() + "</td><td>" + p.getDescription() + "</td><td>" + p.getNotes() + "</td></tr>");
+            out.print("<tr class=\"w3-light-grey w3-hover-dark-grey\">");
+            out.print("<td><img src=\"img/icons8-edit-50.png\" height=\"15\" width=\"15\" onclick=\"window.location.href='project_edt.jsp?id=" + p.getId() + "'; return true;\" />");
+            out.print("<img src=\"img/icons8-trash-50.png\" height=\"15\" width=\"15\" onclick=\"return confirmRemove(" + p.getId() + ");\" />");
+            out.print("</td>");
+            out.print("<td>" + p.getId().toString() + "</td><td>" + p.getDescription() + "</td><td>" + p.getNotes() + "</td></tr>");
           }
         }
         catch (Exception ex) {
-          out.print(ex.getMessage());
+          out.print("<tr><td>" + ex.getMessage() + "</td></tr>");
         }
         %>      
       </table>
@@ -101,6 +114,15 @@ function w3_open() {
 function w3_close() {
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";
+}
+
+function confirmRemove(id) {
+  var answer = confirm("The project will be removed! Please confirm.");
+  if (answer) {
+    window.location.href='ProjectsServlet?op=delete&id=' + id;
+    return true;
+  }
+  return false;
 }
 </script>
 

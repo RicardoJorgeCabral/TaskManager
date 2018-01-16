@@ -19,6 +19,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.taskmanager.model.Project;
+import org.taskmanager.model.Task;
 import org.taskmanager.model.TaskType;
 
 /**
@@ -112,6 +113,28 @@ public class XMLDAO {
     return t;
   }
   
+  public TaskType getTaskTypeByDescription(String desc) throws Exception {
+    TaskType t = null;
+    
+    Element nodes = this.doc.getRootElement().element("tasktypes");
+    Iterator itr = nodes.elementIterator();
+    
+    boolean found = false;
+    
+    while (itr.hasNext() && !found) {
+      Node node = (Node) itr.next();
+      if ( desc.equals(node.selectSingleNode("description"))) {
+        found = true;
+        t = new TaskType();
+        t.setId(new Integer(node.valueOf("@id")));
+        t.setDescription(node.selectSingleNode("description").getText());
+        Node aNode = node.selectSingleNode("notes");
+        if (aNode != null) t.setNotes(aNode.getText());
+      }
+    }
+    return t;
+  }
+  
   public boolean removeTaskType(Integer id) throws Exception {
     Element nodes = this.doc.getRootElement().element("tasktypes");
     Iterator itr = nodes.elementIterator();
@@ -151,7 +174,7 @@ public class XMLDAO {
     return res;
   }
   
-   /*
+  /*
   ================ P R O J E C T S ==================
   */
   
@@ -189,7 +212,8 @@ public class XMLDAO {
     
     while (itr.hasNext() && !found) {
       Node node = (Node) itr.next();
-      if ( id.equals(node.valueOf("@id"))) {
+      Integer currIdx = Integer.parseInt(node.valueOf("@id"));
+      if ( id.equals(currIdx)) {        
         found = true;
         p = new Project();
         p.setId(new Integer(node.valueOf("@id")));
@@ -200,6 +224,28 @@ public class XMLDAO {
     }
     return p;
   }
+  
+  public Project getProjectByDescription(String desc) throws Exception {
+    Project p = null;
+    
+    Element nodes = this.doc.getRootElement().element("projects");
+    Iterator itr = nodes.elementIterator();
+    
+    boolean found = false;
+    
+    while (itr.hasNext() && !found) {
+      Node node = (Node) itr.next();
+      if ( desc.equals(node.selectSingleNode("description"))) {
+        found = true;
+        p = new Project();
+        p.setId(new Integer(node.valueOf("@id")));
+        p.setDescription(node.selectSingleNode("description").getText());
+        Node aNode = node.selectSingleNode("notes");
+        if (aNode != null) p.setNotes(aNode.getText());
+      }
+    }
+    return p;
+  }   
   
   public boolean removeProject(Integer id) throws Exception {
     Element nodes = this.doc.getRootElement().element("projects");
@@ -228,7 +274,7 @@ public class XMLDAO {
       Node node = (Node) itr.next();                        
       Project p = new Project();
       
-      String auxId = node.valueOf("id");
+      String auxId = node.valueOf("@id");
       Integer nodeId = new Integer(auxId);
       p.setId(nodeId);
       p.setDescription(node.selectSingleNode("description").getText());
@@ -240,7 +286,44 @@ public class XMLDAO {
     
     return res;
   }
+
+  /*
+  ================ T A S K S ==================
+  */
+
+  public ArrayList<Task> getTasks() throws Exception {
+    ArrayList<Task> res = new ArrayList<>();
+    Element nodes = this.doc.getRootElement().element("tasks");
     
+    Iterator itr = nodes.elementIterator();
+    
+    while (itr.hasNext()) {
+      Node node = (Node) itr.next();                        
+      Task t = new Task();
+      
+      String aux = node.valueOf("@id");
+      Integer nodeId = new Integer(aux);
+      t.setId(nodeId);
+      
+      t.setDescription(node.selectSingleNode("description").getText());
+      
+      aux = node.selectSingleNode("tasktype").getText();
+      TaskType type = this.getTaskType(new Integer(aux));
+      t.setType(type);
+      
+      aux = node.selectSingleNode("project").getText();
+      Project p = this.getProject(new Integer(aux));
+      t.setProject(p);
+      
+      Node aNode = node.selectSingleNode("notes");
+      if (aNode != null) p.setNotes(aNode.getText());       
+      
+      res.add(t);
+    }
+    
+    return res;
+  }
+  
   public void writeXMLFile() throws Exception {    
     OutputFormat format = OutputFormat.createPrettyPrint();
     XMLWriter writer;      

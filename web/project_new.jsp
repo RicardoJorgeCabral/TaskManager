@@ -15,8 +15,8 @@
 <body>
 
 <%
-String errorf1 = null;
-if (request.getParameter("errorf1")!=null) errorf1=request.getParameter("errorf1");
+String errormsg = null;
+if (request.getParameter("errormsg")!=null) errormsg=request.getParameter("errormsg");
 %>
 
 <!-- Navbar -->
@@ -41,21 +41,30 @@ if (request.getParameter("errorf1")!=null) errorf1=request.getParameter("errorf1
 <!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
 <!-- <div class="w3-main" style="margin-left:250px"> -->
 <div class="w3-main">
-  <form id="form1" action="SaveProjectServlet" method="POST">
+  <form id="form1" action="ProjectsServlet" method="POST">
   <input type="hidden" name="id" value="0" />
+  <input type="hidden" name="op" value="edit" />
   
   <div class="w3-row w3-padding-64">
     <div class="w3-twothird w3-container">
       <h1 class="w3-text-teal">New Project</h1>
       <table>
         <tr>
-          <td valign="top">Project:</td>
-          <td><input type="text" name="description" value="" size="95" /><div class="w3-red"><% if (errorf1 != null) out.print(errorf1); %></div></td>
+          <td valign="top">Project:
+          <div class="w3-red">
+              <% 
+                if (errormsg != null) out.print(errormsg);                     
+              %>
+          </div>
+          </td>
+          <td><input type="text" name="description" value="" size="95" />
+            </td>
         </tr>
         <tr>
           <td valign="top">Notes:</td>
           <td><textarea name="notes" rows="6" cols="100">
-            </textarea></td>
+            </textarea>
+          </td>
         </tr>
         <tr>
           <td colspan="2">
